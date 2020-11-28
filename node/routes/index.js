@@ -3,7 +3,6 @@ var router = express.Router();
 var moment = require('moment');
 var pool = require('../dbConnection');
 
-/* GET home page. */
 router.get('/', function (req, res, next) {
   var query = 'SELECT *, to_char(created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM board';
   pool.connect(function (err, client) {
