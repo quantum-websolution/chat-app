@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <div class="wrapper">
+    <ul class="main-list">
+      <% boardList.forEach(function(boardItem) { %>
+      <li class="main-list__item">
+        <div class="board">
+          <p class="board__title"><%= boardItem.title %></p>
+          <p class="board__date"><%= boardItem.created_at %></p>
+        </div>
+      </li>
+      <% }); %>
+    </ul>
+
+    <form action="/" method="post" class="board-form">
+      <input type="text" name="title" class="input" placeholder="投稿内容" required>
+      <button type="submit" class="submit">投稿</button>
+    </form>
+
+  </div>
+</body>
+
+</html>
