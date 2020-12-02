@@ -3,10 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session'); // 追加
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var boards = require('./routes/boards'); //追加
+var register = require('./routes/register'); // 追加
+var login = require('./routes/login');　// 追加
+var logout = require('./routes/logout');
+var setUser = require('./setUser'); // 追加
 
 var app = express();
 
@@ -20,9 +25,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+//　session
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use('/', setUser, indexRouter);
 app.use('/users', usersRouter);
-app.use('/boards', boards);　//追加
+app.use('/boards', setUser, boards);　//追加
+app.use('/register', register); //追加
+app.use('/login', login); // 追加
+app.use('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -22,6 +22,10 @@
       <% }); %>
     </ul>
 
+    <% if (typeof user !== 'undefined') { %>
+    <span class="login-user"><%= user.user_name %>さんとしてログインしています</span>
+    <% } %>
+
     <form action="/" method="post" class="board-form">
       <input type="text" name="title" class="input" placeholder="投稿内容" required>
       <button type="submit" class="submit">投稿</button>
