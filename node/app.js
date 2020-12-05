@@ -14,6 +14,7 @@ var login = require('./routes/login');　// 追加
 var logout = require('./routes/logout');
 var setUser = require('./setUser'); // 追加
 var del = require('./routes/del'); // 追加
+var update = require('./routes/update'); // 追加
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use('/register', register); //追加
 app.use('/login', login); // 追加
 app.use('/logout', logout);
 app.use('/del', del);
+app.use('/update', update);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

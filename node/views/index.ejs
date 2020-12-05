@@ -14,6 +14,10 @@
         <input type="hidden" name="id" value="<%= boardItem.board_id %>">
         <button type="submit" class="submit">削除</button>
       </form>
+      <form action="/update" method="post" class="board-form">
+        <input type="hidden" name="id" value="<%= boardItem.board_id %>">
+        <button type="submit" class="submit">更新</button>
+      </form>
     </a>
   </li>
   <% }); %>
