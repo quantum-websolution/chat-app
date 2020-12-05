@@ -19,7 +19,6 @@ router.post('/', function (req, res, next) {
     pool.connect(function (err, client) {
         client.query(query, function (err, user) {
             var userId = user.rows.length ? user.rows[0].user_id : false;
-            console.log('userId', userId)
             if (userId) {
                 req.session.user_id = userId;
                 res.redirect('/');

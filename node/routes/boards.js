@@ -28,9 +28,7 @@ router.post('/:board_id', function (req, res, next) {
     var createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
     var query = "INSERT INTO messages (message, board_id, user_id, created_at) VALUES ('" + message + "', " + "'" + boardId + "', '" + userId + "', " + "'" + createdAt + "')";
     pool.connect(function (err, client) {
-        console.log(err);
         client.query(query, function (err, rows) {
-            console.log(err);
             res.redirect('/boards/' + boardId);
         });
     });

@@ -10,6 +10,10 @@
     <a href="/boards/<%= boardItem.board_id %>" class="board">
       <p class="board__title"><%= boardItem.title %></p>
       <p class="board__date"><%= boardItem.user_name %> <%= boardItem.created_at %></p>
+      <form action="/del" method="post" class="board-form">
+        <input type="hidden" name="id" value="<%= boardItem.board_id %>">
+        <button type="submit" class="submit">削除</button>
+      </form>
     </a>
   </li>
   <% }); %>
