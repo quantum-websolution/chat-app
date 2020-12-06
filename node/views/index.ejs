@@ -1,7 +1,6 @@
 <% layout('layout') %>
 <form action="/" method="post" class="board-form">
-  タイトル: <input type="text" name="title" class="input" required><br>
-  <br>
+  <input type="text" name="title" class="input" placeholder="タイトル" required>
   <button type="submit" class="submit">ボード作成</button>
 </form>
 <ul class="main-list">
@@ -10,14 +9,16 @@
     <a href="/boards/<%= boardItem.board_id %>" class="board">
       <p class="board__title"><%= boardItem.title %></p>
       <p class="board__date"><%= boardItem.user_name %> <%= boardItem.created_at %></p>
-      <form action="/del" method="post" class="board-form">
-        <input type="hidden" name="id" value="<%= boardItem.board_id %>">
-        <button type="submit" class="submit">削除</button>
-      </form>
-      <form action="/update" method="post" class="board-form">
-        <input type="hidden" name="id" value="<%= boardItem.board_id %>">
-        <button type="submit" class="submit">更新</button>
-      </form>
+      <div class="btn＿area">
+        <form action="/del" method="post" class="btn_form">
+          <input type="hidden" name="id" value="<%= boardItem.board_id %>">
+          <button type="submit" class="btn btn_del">DELETE</button>
+        </form>
+        <form action="/update" method="post" class="btn_form">
+          <input type="hidden" name="id" value="<%= boardItem.board_id %>">
+          <button type="submit" class="btn btn_update">UPDATE</button>
+        </form>
+      </div>
     </a>
   </li>
   <% }); %>
