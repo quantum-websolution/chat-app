@@ -4,13 +4,11 @@ const pool = require('../dbConnection');
 
 router.post('/', async (req, res, next) => {
   try {
-    const boardId = req.body.id;
-    const query = 'DELETE FROM board WHERE board_id = $1';
+    const channelId = req.body.id;
+    const query = 'DELETE FROM channel WHERE channel_id = $1';
 
-    await pool.query(query, [boardId]);
-
+    await pool.query(query, [channelId]);
     res.redirect('/');
-
 
   } catch (error) {
     console.error(error);

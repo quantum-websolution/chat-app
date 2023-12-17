@@ -29,8 +29,7 @@ router.post('/', async (req, res, next) => {
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     const insertQuery = 'INSERT INTO channel (user_id, channel_title, created_at) VALUES ($1, $2, $3)';
-    const updateQuery = 'UPDATE channel SET title = $1 WHERE channel_id = $2';
-
+    const updateQuery = 'UPDATE channel SET channel_title = $1 WHERE channel_id = $2';
 
     if (!update) {
       await pool.query(insertQuery, [userId, title, createdAt]);
@@ -38,7 +37,6 @@ router.post('/', async (req, res, next) => {
       await pool.query(updateQuery, [title, id]);
     }
     res.redirect('/');
-
 
   } catch (error) {
     console.error(error);

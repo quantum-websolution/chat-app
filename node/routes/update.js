@@ -4,21 +4,20 @@ const pool = require('../dbConnection');
 
 router.post('/', async function (req, res, next) {
   try {
-    const boardId = req.body.id;
-    const query = 'SELECT board_id, title FROM board WHERE board_id = $1';
+    const channelId = req.body.id;
+    const query = 'SELECT channel_id, channel_title FROM channel WHERE channel_id = $1';
 
-    const result = await pool.query(query, [boardId]);
+    const result = await pool.query(query, [channelId]);
 
     if (result.rows.length > 0) {
-      const board = result.rows[0];
+      const channel = result.rows[0];
       res.render('update', {
-        id: board.board_id,
-        title: board.title,
+        id: channel.channel_id,
+        title: channel.channel_title,
       });
     } else {
       res.status(404).send('ボードが見つかりません');
     }
-
 
   } catch (error) {
     console.error(error);

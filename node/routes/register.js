@@ -17,9 +17,8 @@ router.post('/', async function (req, res, next) {
     const password = req.body.password;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-    const emailExistsQuery = 'SELECT * FROM users WHERE email = $1 LIMIT 1';
-    const registerQuery = 'INSERT INTO users (user_name, email, password, created_at) VALUES ($1, $2, $3, $4)';
-
+    const emailExistsQuery = 'SELECT * FROM users WHERE user_email = $1 LIMIT 1';
+    const registerQuery = 'INSERT INTO users (user_name, user_email, user_password, created_at) VALUES ($1, $2, $3, $4)';
 
     // 既に登録されているメールアドレスかどうかを確認
     const emailExists = await pool.query(emailExistsQuery, [email]);

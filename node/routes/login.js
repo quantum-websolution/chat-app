@@ -19,7 +19,7 @@ router.post('/', async function (req, res, next) {
     const password = req.body.password;
 
     // パスワードのハッシュをデータベースから取得
-    const query = 'SELECT user_id, password FROM users WHERE email = $1 LIMIT 1';
+    const query = 'SELECT user_id, user_password FROM users WHERE user_email = $1 LIMIT 1';
 
     const result = await pool.query(query, [email]);
 
@@ -28,7 +28,7 @@ router.post('/', async function (req, res, next) {
       const userId = user.user_id;
 
       // パスワードの比較
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+      const isPasswordValid = await bcrypt.compare(password, user.user_password);
 
       if (isPasswordValid) {
         req.session.user_id = userId;

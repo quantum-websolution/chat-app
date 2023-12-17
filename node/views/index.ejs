@@ -8,7 +8,7 @@
 <ul class="main-list">
   <% channelList.forEach(function(channelItem) { %>
     <li class="main-list__item">
-      <a href="/channels/<%= channelItem.channel_id %>" class="channel">
+      <a href="/message/<%= channelItem.channel_id %>" class="channel">
         <p class="channel__title">
           <%= channelItem.channel_title %>
         </p>
@@ -30,9 +30,9 @@
     </li>
   <% }); %>
 </ul>
-  <% if (typeof user !=='undefined' ) { %>
-    <span class="login-user">
-      <%= user.user_name %>さんとしてログインしています
-    </span>
-    <%
-} %>
+
+<% if (typeof user !=='undefined' ) { %>
+  <span class="login-user">
+    <%= user.user_name %>さんとしてログインしています
+  </span>
+<% } %>
