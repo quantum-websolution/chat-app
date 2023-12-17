@@ -5,13 +5,13 @@ const pool = require('../dbConnection');
 
 router.get('/', async (req, res, next) => {
   try {
-    const query = 'SELECT B.board_id, B.user_id, B.title, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM board B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
+    const query = 'SELECT B.channel_id, B.user_id, B.channel_title, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM channel B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
 
     const result = await pool.query(query);
 
     res.render('index', {
       title: 'はじめてのNode.js',
-      boardList: result.rows
+      channelList: result.rows
     });
 
   } catch (error) {
@@ -28,8 +28,8 @@ router.post('/', async (req, res, next) => {
     const userId = req.session.user_id || 0;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-    const insertQuery = 'INSERT INTO board (user_id, title, created_at) VALUES ($1, $2, $3)';
-    const updateQuery = 'UPDATE board SET title = $1 WHERE board_id = $2';
+    const insertQuery = 'INSERT INTO channel (user_id, channel_title, created_at) VALUES ($1, $2, $3)';
+    const updateQuery = 'UPDATE channel SET title = $1 WHERE channel_id = $2';
 
 
     if (!update) {
