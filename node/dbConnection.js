@@ -2,7 +2,7 @@ const Pool = require('pg-pool');
 
 // 環境変数を使用してセキュアに設定
 const dbConfig = {
-  database: process.env.DB_NAME || 'bulletin_board',
+  database: process.env.DB_NAME || 'chat_app_db',
   user: process.env.DB_USER || 'tatsuya',
   password: process.env.DB_PASSWORD || '',
   host: process.env.DB_HOST || 'localhost',

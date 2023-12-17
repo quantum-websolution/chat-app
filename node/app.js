@@ -7,7 +7,7 @@ const logger = require('morgan');
 const session = require('express-session'); // 追加
 
 const indexRouter = require('./routes/index');
-const boards = require('./routes/boards'); //追加
+const message = require('./routes/message'); //追加
 const register = require('./routes/register'); // 追加
 const login = require('./routes/login'); // 追加
 const logout = require('./routes/logout');
@@ -36,7 +36,7 @@ app.use(session({
 }));
 
 app.use('/', setUser, indexRouter);
-app.use('/boards', setUser, boards);　//追加
+app.use('/message', setUser, message);　//追加
 app.use('/register', register); //追加
 app.use('/login', login); // 追加
 app.use('/logout', logout);
