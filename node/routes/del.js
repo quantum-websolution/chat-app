@@ -7,15 +7,10 @@ router.post('/', async (req, res, next) => {
     const boardId = req.body.id;
     const query = 'DELETE FROM board WHERE board_id = $1';
 
-    const client = await pool.connect();
-    try {
-      await pool.query(query, [boardId]);
+    await pool.query(query, [boardId]);
 
-      res.redirect('/');
-    } finally {
-      console.log("pool release");
-      client.release();
-    }
+    res.redirect('/');
+
 
   } catch (error) {
     console.error(error);

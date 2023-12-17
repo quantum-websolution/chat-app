@@ -19,30 +19,26 @@ router.post('/', async function (req, res, next) {
 
     const emailExistsQuery = 'SELECT * FROM users WHERE email = $1 LIMIT 1';
     const registerQuery = 'INSERT INTO users (user_name, email, password, created_at) VALUES ($1, $2, $3, $4)';
-    const client = await pool.connect();
 
-    try {
-      // 既に登録されているメールアドレスかどうかを確認
-      const emailExists = await client.query(emailExistsQuery, [email]);
 
-      if (emailExists.rows.length) {
-        res.render('register', {
-          title: '新規会員登録',
-          emailExists: '既に登録されているメールアドレスです'
-        });
-      } else {
-        // パスワードのハッシュ化
-        const hashedPassword = await bcrypt.hash(password, 10);
+    // 既に登録されているメールアドレスかどうかを確認
+    const emailExists = await pool.query(emailExistsQuery, [email]);
 
-        // ユーザーの新規登録
-        await pool.query(registerQuery, [userName, email, hashedPassword, createdAt]);
+    if (emailExists.rows.length) {
+      res.render('register', {
+        title: '新規会員登録',
+        emailExists: '既に登録されているメールアドレスです'
+      });
+    } else {
+      // パスワードのハッシュ化
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        res.redirect('/login');
-      }
-    } finally {
-      console.log("pool release");
-      client.release();
+      // ユーザーの新規登録
+      await pool.query(registerQuery, [userName, email, hashedPassword, createdAt]);
+
+      res.redirect('/login');
     }
+
   } catch (error) {
     console.error(error);
     res.status(500).send('内部サーバーエラー');

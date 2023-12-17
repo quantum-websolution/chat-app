@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const Pool = require('pg-pool');
 
 // 環境変数を使用してセキュアに設定
 const dbConfig = {
@@ -14,7 +14,7 @@ const pool = new Pool(dbConfig);
 
 // コネクションがエラーを発生させた場合のハンドリング
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
+  console.error('Unexpected error on idle clients', err);
   process.exit(-1); // アプリケーションの異常終了
 });
 

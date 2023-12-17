@@ -7,18 +7,13 @@ router.get('/', async (req, res, next) => {
   try {
     const query = 'SELECT B.board_id, B.user_id, B.title, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM board B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
 
-    const client = await pool.connect();
-    try {
-      const result = await client.query(query);
+    const result = await pool.query(query);
 
-      res.render('index', {
-        title: 'はじめてのNode.js',
-        boardList: result.rows
-      });
-    } finally {
-      console.log("pool release");
-      client.release();
-    }
+    res.render('index', {
+      title: 'はじめてのNode.js',
+      boardList: result.rows
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).send('内部サーバーエラー');
@@ -36,18 +31,14 @@ router.post('/', async (req, res, next) => {
     const insertQuery = 'INSERT INTO board (user_id, title, created_at) VALUES ($1, $2, $3)';
     const updateQuery = 'UPDATE board SET title = $1 WHERE board_id = $2';
 
-    const client = await pool.connect();
-    try {
-      if (!update) {
-        await client.query(insertQuery, [userId, title, createdAt]);
-      } else {
-        await client.query(updateQuery, [title, id]);
-      }
-      res.redirect('/');
-    } finally {
-      console.log("pool release");
-      client.release();
+
+    if (!update) {
+      await pool.query(insertQuery, [userId, title, createdAt]);
+    } else {
+      await pool.query(updateQuery, [title, id]);
     }
+    res.redirect('/');
+
 
   } catch (error) {
     console.error(error);
