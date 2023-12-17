@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
+const dayjs = require('dayjs');
 const pool = require('../dbConnection');
 
 router.get('/:board_id', async (req, res, next) => {
@@ -34,7 +34,7 @@ router.post('/:board_id', async (req, res, next) => {
     const message = req.body.message;
     const boardId = req.params.board_id;
     const userId = req.session.user_id || 0;
-    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     const insertQuery = 'INSERT INTO messages (message, board_id, user_id, created_at) VALUES ($1, $2, $3, $4)';
     await pool.query(insertQuery, [message, boardId, userId, createdAt]);

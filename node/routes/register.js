@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
+const dayjs = require('dayjs');
 const bcrypt = require('bcrypt');
 const pool = require('../dbConnection');
 
@@ -15,7 +15,7 @@ router.post('/', async function (req, res, next) {
     const userName = req.body.user_name;
     const email = req.body.email;
     const password = req.body.password;
-    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     const emailExistsQuery = 'SELECT * FROM users WHERE email = $1 LIMIT 1';
     const registerQuery = 'INSERT INTO users (user_name, email, password, created_at) VALUES ($1, $2, $3, $4)';

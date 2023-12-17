@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
+const dayjs = require('dayjs');
 const pool = require('../dbConnection');
 
 router.get('/', async (req, res, next) => {
@@ -26,7 +26,7 @@ router.post('/', async (req, res, next) => {
     const update = req.body.update;
     const title = req.body.title;
     const userId = req.session.user_id || 0;
-    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     const insertQuery = 'INSERT INTO board (user_id, title, created_at) VALUES ($1, $2, $3)';
     const updateQuery = 'UPDATE board SET title = $1 WHERE board_id = $2';
