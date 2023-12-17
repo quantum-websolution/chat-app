@@ -1,22 +1,21 @@
-var createError = require('http-errors');
-var express = require('express');
-var engine = require('ejs-locals');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session'); // 追加
+const createError = require('http-errors');
+const express = require('express');
+const engine = require('ejs-locals');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session'); // 追加
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var boards = require('./routes/boards'); //追加
-var register = require('./routes/register'); // 追加
-var login = require('./routes/login');　// 追加
-var logout = require('./routes/logout');
-var setUser = require('./setUser'); // 追加
-var del = require('./routes/del'); // 追加
-var update = require('./routes/update'); // 追加
+const indexRouter = require('./routes/index');
+const boards = require('./routes/boards'); //追加
+const register = require('./routes/register'); // 追加
+const login = require('./routes/login'); // 追加
+const logout = require('./routes/logout');
+const setUser = require('./setUser'); // 追加
+const del = require('./routes/del'); // 追加
+const update = require('./routes/update'); // 追加
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.engine('ejs', engine);
@@ -37,7 +36,6 @@ app.use(session({
 }));
 
 app.use('/', setUser, indexRouter);
-app.use('/users', usersRouter);
 app.use('/boards', setUser, boards);　//追加
 app.use('/register', register); //追加
 app.use('/login', login); // 追加
@@ -51,12 +49,13 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  console.log(err)
   res.status(err.status || 500);
   res.render('error');
 });

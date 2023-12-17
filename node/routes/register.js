@@ -1,41 +1,52 @@
-var express = require('express');
-var router = express.Router();
-var moment = require('moment');
-var pool = require('../dbConnection');
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
+const bcrypt = require('bcrypt');
+const pool = require('../dbConnection');
 
 router.get('/', function (req, res, next) {
-    res.render('register', {
-        title: '新規会員登録'
-    });
+  res.render('register', {
+    title: '新規会員登録'
+  });
 });
 
-router.post('/', function (req, res, next) {
-    var userName = req.body.user_name;
-    var email = req.body.email;
-    var password = req.body.password;
-    var createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
-    var emailExistsQuery = "SELECT * FROM users WHERE email = '" + email + "' LIMIT 1"; // 追加
-    var registerQuery = "INSERT INTO users (user_name, email, password, created_at) VALUES ('" + userName + "', " + "'" + email + "', " + "'" + password + "', " + "'" + createdAt + "')";
+router.post('/', async function (req, res, next) {
+  try {
+    const userName = req.body.user_name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    pool.connect(function (err, client) {
+    const emailExistsQuery = 'SELECT * FROM users WHERE email = $1 LIMIT 1';
+    const registerQuery = 'INSERT INTO users (user_name, email, password, created_at) VALUES ($1, $2, $3, $4)';
+    const client = await pool.connect();
 
-        client.query(emailExistsQuery, function (err, email) {
-            var emailExists = email.rows.length;
-            if (emailExists) {
-                res.render('register', {
-                    title: '新規会員登録',
-                    emailExists: '既に登録されているメールアドレスです'
-                });
-            } else {
-                client.query(registerQuery, function (err, rows) {
-                    res.redirect('/login');
-                });
-            }
+    try {
+      // 既に登録されているメールアドレスかどうかを確認
+      const emailExists = await client.query(emailExistsQuery, [email]);
 
+      if (emailExists.rows.length) {
+        res.render('register', {
+          title: '新規会員登録',
+          emailExists: '既に登録されているメールアドレスです'
         });
+      } else {
+        // パスワードのハッシュ化
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    });
+        // ユーザーの新規登録
+        await pool.query(registerQuery, [userName, email, hashedPassword, createdAt]);
+
+        res.redirect('/login');
+      }
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('内部サーバーエラー');
+  }
 });
-
 
 module.exports = router;

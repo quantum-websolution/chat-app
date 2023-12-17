@@ -1,37 +1,63 @@
-var express = require('express');
-var router = express.Router();
-var moment = require('moment');
-var pool = require('../dbConnection');
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
+const pool = require('../dbConnection');
 
+router.get('/:board_id', async (req, res, next) => {
 
-router.get('/:board_id', function (req, res, next) {
-    var boardId = req.params.board_id;
-    var getBoardQuery = 'SELECT * FROM board WHERE board_id = ' + boardId;
-    var getMessagesQuery = 'SELECT M.message, coalesce(U.user_name, \'名無し\') AS user_name, to_char(M.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM messages M LEFT OUTER JOIN users U ON M.user_id = U.user_id WHERE M.board_id = ' + boardId + ' ORDER BY M.created_at ASC'; // 変更
-    pool.connect(function (err, client) {
-        client.query(getBoardQuery, function (err, board) {
-            client.query(getMessagesQuery, function (err, messages) {
-                res.render('boards', {
-                    title: board.rows[0].title,
-                    board: board.rows[0],
-                    messageList: messages.rows
-                });
-            });
-        });
-    });
+  try {
+    const boardId = req.params.board_id;
+
+    const getBoardQuery = 'SELECT * FROM board WHERE board_id = $1';
+    const getMessagesQuery = 'SELECT M.message, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(M.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM messages M LEFT OUTER JOIN users U ON M.user_id = U.user_id WHERE M.board_id = $1 ORDER BY M.created_at ASC';
+
+    const client = await pool.connect();
+    try {
+      const boardResult = await client.query(getBoardQuery, [boardId]);
+      const messagesResult = await client.query(getMessagesQuery, [boardId]);
+
+      if (boardResult.rows.length === 0) {
+        return res.status(404).send('ボードが見つかりません');
+      }
+
+      res.render('boards', {
+        title: boardResult.rows[0].title,
+        board: boardResult.rows[0],
+        messageList: messagesResult.rows
+      });
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+
+  } catch (error) {
+    res.status(500).send('内部サーバーエラー');
+  }
 });
 
-router.post('/:board_id', function (req, res, next) {
-    var message = req.body.message;
-    var boardId = req.params.board_id;
-    var userId = req.session.user_id ? req.session.user_id : 0;
-    var createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
-    var query = "INSERT INTO messages (message, board_id, user_id, created_at) VALUES ('" + message + "', " + "'" + boardId + "', '" + userId + "', " + "'" + createdAt + "')";
-    pool.connect(function (err, client) {
-        client.query(query, function (err, rows) {
-            res.redirect('/boards/' + boardId);
-        });
-    });
+router.post('/:board_id', async (req, res, next) => {
+  try {
+    const message = req.body.message;
+    const boardId = req.params.board_id;
+    const userId = req.session.user_id || 0;
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    const insertQuery = 'INSERT INTO messages (message, board_id, user_id, created_at) VALUES ($1, $2, $3, $4)';
+
+    const client = await pool.connect();
+    try {
+      await client.query(insertQuery, [message, boardId, userId, createdAt]);
+
+      res.redirect('/boards/' + boardId);
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).send('内部サーバーエラー');
+  }
 });
 
 module.exports = router;

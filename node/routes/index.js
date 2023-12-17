@@ -1,41 +1,57 @@
-var express = require('express');
-var router = express.Router();
-var moment = require('moment');
-var pool = require('../dbConnection');
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
+const pool = require('../dbConnection');
 
-router.get('/', function (req, res, next) {
-  var query = 'SELECT B.board_id, B.user_id, B.title, coalesce(U.user_name, \'名無し\') AS user_name, to_char(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM board B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
-  pool.connect(function (err, client) {
-    client.query(query, function (err, result) {
+router.get('/', async (req, res, next) => {
+  try {
+    const query = 'SELECT B.board_id, B.user_id, B.title, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM board B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
+
+    const client = await pool.connect();
+    try {
+      const result = await client.query(query);
+
       res.render('index', {
         title: 'はじめてのNode.js',
         boardList: result.rows
       });
-    });
-  });
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('内部サーバーエラー');
+  }
 });
 
-router.post('/', function (req, res, next) {
-  var id = req.body.id;
-  var update = req.body.update;
-  var title = req.body.title;
-  var userId = req.session.user_id ? req.session.user_id : 0;
-  var createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
-  var insertQuery = "INSERT INTO board (user_id, title, created_at) VALUES ('" + userId + "','" + title + "', " + "'" + createdAt + "')";
-  var updateQuery = "UPDATE board SET title = '" + title + "' WHERE board_id = " + id;
+router.post('/', async (req, res, next) => {
+  try {
+    const id = req.body.id;
+    const update = req.body.update;
+    const title = req.body.title;
+    const userId = req.session.user_id || 0;
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
-  if (!update) {
-    pool.connect(function (err, client) {
-      client.query(insertQuery, function (err) {
-        res.redirect('/');
-      });
-    });
-  } else {
-    pool.connect(function (err, client) {
-      client.query(updateQuery, function (err) {
-        res.redirect('/');
-      });
-    });
+    const insertQuery = 'INSERT INTO board (user_id, title, created_at) VALUES ($1, $2, $3)';
+    const updateQuery = 'UPDATE board SET title = $1 WHERE board_id = $2';
+
+    const client = await pool.connect();
+    try {
+      if (!update) {
+        await client.query(insertQuery, [userId, title, createdAt]);
+      } else {
+        await client.query(updateQuery, [title, id]);
+      }
+      res.redirect('/');
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('内部サーバーエラー');
   }
 });
 

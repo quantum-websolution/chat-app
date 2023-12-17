@@ -1,35 +1,61 @@
-var express = require('express');
-var router = express.Router();
-var pool = require('../dbConnection');
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcrypt');
+const pool = require('../dbConnection');
 
 router.get('/', function (req, res, next) {
-    if (req.session.user_id) {
-        res.redirect('/');
-    } else {
-        res.render('login', {
-            title: 'ログイン'
-        });
-    }
+  if (req.session.user_id) {
+    res.redirect('/');
+  } else {
+    res.render('login', {
+      title: 'ログイン'
+    });
+  }
 });
 
-router.post('/', function (req, res, next) {
-    var email = req.body.email;
-    var password = req.body.password;
-    var query = "SELECT user_id FROM users WHERE email = '" + email + "' AND password = '" + password + "' LIMIT 1";
-    pool.connect(function (err, client) {
-        client.query(query, function (err, user) {
-            var userId = user.rows.length ? user.rows[0].user_id : false;
-            if (userId) {
-                req.session.user_id = userId;
-                res.redirect('/');
-            } else {
-                res.render('login', {
-                    title: 'ログイン',
-                    noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
-                });
-            }
+router.post('/', async function (req, res, next) {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // パスワードのハッシュをデータベースから取得
+    const query = 'SELECT user_id, password FROM users WHERE email = $1 LIMIT 1';
+
+    const client = await pool.connect();
+
+    try {
+      const result = await client.query(query, [email]);
+
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        const userId = user.user_id;
+
+        // パスワードの比較
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (isPasswordValid) {
+          req.session.user_id = userId;
+          res.redirect('/');
+        } else {
+          res.render('login', {
+            title: 'ログイン',
+            noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
+          });
+        }
+      } else {
+        res.render('login', {
+          title: 'ログイン',
+          noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
         });
-    });
+      }
+    } finally {
+      console.log("pool release");
+      client.release();
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('内部サーバーエラー');
+  }
 });
 
 module.exports = router;
