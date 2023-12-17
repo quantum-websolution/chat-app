@@ -1,9 +1,33 @@
-# chat-app
+installしたモジュール
 
-・[Node.jsとExpressのインストール編](https://qiita.com/tataboo/items/e07df8262bb08c089c1f)
+bcrypt
+　passwordをhush化する奴
 
-・[PostgreSQLインストール＆Node.jsとdatabase接続編](https://qiita.com/tataboo/items/48be5496891898a25c1a)
+dayjs
+  日付取得する奴
 
-・[詳細ページの作成と非同期処理について](https://qiita.com/tataboo/items/c01aa14baa31b3805cf8)
+express-session
+  ログイン機能を実装するのに使う
 
-・[ユーザー登録の機能](https://qiita.com/tataboo/items/c9446fdd279597e58bfd)
+nodemo
+  コードを監視してくれるやつ
+
+pg pg-pool
+  postgressに接続するために使用する
+
+
+アプリケーションの起動方法
+
+前提
+node、postgressのインストールが完了していること
+
+1. dbメモのsqlを実行する
+
+2. dbConnection.jsのuserとpasswordを変更する
+  ※ \dt;を実行してownerのところがuserに入ります
+
+3. npm install
+
+4. nodemon 
+
+5. localhost:3000 へアクセス
