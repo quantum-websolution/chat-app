@@ -1,5 +1,11 @@
 <% layout('layout') %>
 
+<% if (typeof user !=='undefined' ) { %>
+  <span class="login-user">
+    <%= user.user_name %>さんとしてログインしています
+  </span>
+<% } %>
+
 <form action="/" method="post" class="channel-form">
   <input type="text" name="title" class="input" placeholder="タイトル" required>
   <button type="submit" class="submit">ボード作成</button>
@@ -7,32 +13,36 @@
 
 <ul class="main-list">
   <% channelList.forEach(function(channelItem) { %>
-    <li class="main-list__item">
+    <li class="main-list_item">
       <a href="/message/<%= channelItem.channel_id %>" class="channel">
-        <p class="channel__title">
+        <p class="channel_title">
           <%= channelItem.channel_title %>
         </p>
-        <p class="channel__date">
-          <%= channelItem.user_name %>
-          <%= channelItem.created_at %>
-        </p>
-        <div class="btn_area">
-          <form action="/del" method="post" class="btn_form">
-            <input type="hidden" name="id" value="<%= channelItem.channel_id %>">
-            <button type="submit" class="btn btn_del">DELETE</button>
-          </form>
-          <form action="/update" method="post" class="btn_form">
-            <input type="hidden" name="id" value="<%= channelItem.channel_id %>">
-            <button type="submit" class="btn btn_update">UPDATE</button>
-          </form>
+        <div class="channel_user_info">
+          <p class="channel_user_name">
+            ユーザー名:<%= channelItem.user_name %>
+          </p>
+          <p class="channel_date">
+            <%= channelItem.created_at %>
+          </p>
+        </div>
+
+        <div class="three_point_button">
+          <input class="checkbox" type="checkbox" id="checked" checked>
+          <label class="point" for="checked">︙</label>
+
+          <div class="button_area">
+            <form action="/del" method="post" class="button_form">
+              <input type="hidden" name="id" value="<%= channelItem.channel_id %>">
+              <button type="submit" class="button_del">DELETE</button>
+            </form>
+            <form action="/update" method="post" class="button_form">
+              <input type="hidden" name="id" value="<%= channelItem.channel_id %>">
+              <button type="submit" class="button_update">UPDATE</button>
+            </form>
+          </div>
         </div>
       </a>
     </li>
   <% }); %>
 </ul>
-
-<% if (typeof user !=='undefined' ) { %>
-  <span class="login-user">
-    <%= user.user_name %>さんとしてログインしています
-  </span>
-<% } %>
