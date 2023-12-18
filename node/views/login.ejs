@@ -1,15 +1,25 @@
 <% layout('layout') %>
 
-<p class="main-title"><%= title %></p>
+<div class="top_link">
+  <a href="/" class="btn">← トップへもどる</a>
+</div>
 
-<form action="/login" method="post" class="board-form">
-  <span class="label">Eメール</span><input type="email" name="email" class="input" required>
-  <span class="label">パスワード</span><input type="password" name="password" class="input" required>
-  <button type="submit" class="submit">ログイン</button>
-</form>
+<p class="main-title"><%= title %></p>
 
 <% if (typeof noUser !== 'undefined') { %>
   <p class="error"><%= noUser %></p>
 <% } %>
 
-<a href="/" class="btn">トップへもどる</a>
+<form action="/login" method="post" class="form">
+  <p>
+    <span class="label">Eメール</span>
+    <input type="email" name="email" class="input" required>
+  </p>
+  <p>
+    <span class="label">パスワード</span>
+    <input type="password" name="password" class="input" required>
+  </p>
+  <div class="button-area">
+    <button type="submit" class="submit">ログイン</button>
+  </div>
+</form>

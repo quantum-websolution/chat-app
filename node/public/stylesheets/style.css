@@ -25,30 +25,15 @@
   background-color: #36a2eb;
 }
 
-.channel-form {
+/* 投稿ボタン */
+
+.form {
   width: 100%;
   text-align: center;
   margin: 30px 0;
 }
 
-.channel-form input {
-  height: 2.4em;
-  width: 300px;
-  padding: 0 16px;
-  border-radius: 4px;
-  border: none;
-  box-shadow: 0 0 0 1px #ccc inset;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.channel-form input:focus {
-  outline: 0;
-  box-shadow: 0 0 0 2px rgb(33, 150, 243) inset;
-}
-
-.channel-form .submit {
+.form .submit {
   border: 1px solid #36a2eb;
   text-align: center;
   display: inline-block;
@@ -64,11 +49,31 @@
   transition: box-shadow 200ms ease-out;
 }
 
-.channel-form .submit:hover {
+.form .submit:hover {
   color: #36a2eb;
   background-color: #fff;
 }
 
+/* input */
+
+input {
+  height: 2.4em;
+  width: 300px;
+  padding: 0 16px;
+  border-radius: 4px;
+  border: none;
+  box-shadow: 0 0 0 1px #ccc inset;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px rgb(33, 150, 243) inset;
+}
+
+/* コンテンツ */
 .main-list {
   list-style: none;
   display: flex;
@@ -81,7 +86,7 @@
   margin-bottom: 10px;
 }
 
-.main-list_item .channel {
+.main-list_item .list {
   position: relative;
   text-decoration: none;
   display: flex;
@@ -89,12 +94,13 @@
   justify-content: space-between;
   color: #000;
   border: 1px solid #ccc;
+  border-radius: 3px;
   width: 800px;
   padding: 10px 30px 10px 20px;
 }
 
-.main-list_item .channel .channel_user_name,
-.main-list_item .channel .channel_date {
+.main-list_item .list .user_name,
+.main-list_item .list .date {
   font-size: 12px;
   color: #ccc;
 }
@@ -106,7 +112,7 @@
 
 .three_point_button {
   position: absolute;
-  top: 0;
+  top: 5px;
   right: 0;
 }
 
@@ -149,4 +155,43 @@
   outline: none;
   padding: 0;
   appearance: none;
+}
+
+/* main-title */
+
+.main-title {
+  margin: 20px 0 0 60px;
+  font-size: 24px;
+}
+
+.top_link {
+  padding: 20px 0 0 20px;
+}
+
+.top_link a {
+  text-decoration: none;
+  color: #000;
+}
+
+.top_link a:hover {
+  text-decoration: none;
+  color: #36a2eb;
+}
+
+.error {
+  text-align: center;
+  color: #dc143c;
+}
+
+.form span {
+  display: block;
+  width: 100px;
+  margin-right: 10px;
+}
+
+.form p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 }

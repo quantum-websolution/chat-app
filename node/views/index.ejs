@@ -6,7 +6,7 @@
   </span>
 <% } %>
 
-<form action="/" method="post" class="channel-form">
+<form action="/" method="post" class="form">
   <input type="text" name="title" class="input" placeholder="タイトル" required>
   <button type="submit" class="submit">ボード作成</button>
 </form>
@@ -14,15 +14,15 @@
 <ul class="main-list">
   <% channelList.forEach(function(channelItem) { %>
     <li class="main-list_item">
-      <a href="/message/<%= channelItem.channel_id %>" class="channel">
-        <p class="channel_title">
+      <a href="/message/<%= channelItem.channel_id %>" class="list">
+        <p class="title">
           <%= channelItem.channel_title %>
         </p>
-        <div class="channel_user_info">
-          <p class="channel_user_name">
+        <div class="user_info">
+          <p class="user_name">
             ユーザー名:<%= channelItem.user_name %>
           </p>
-          <p class="channel_date">
+          <p class="date">
             <%= channelItem.created_at %>
           </p>
         </div>

@@ -1,22 +1,35 @@
 <% layout('layout') %>
 
-<p class="main-title">
-  <%= title %>
-</p>
+<div class="top_link">
+  <a href="/" class="btn">← トップへもどる</a>
+</div>
+
+<div class="main-title">
+  <h1><%= title %></h1>
+</div>
+
+<form action="/message/<%= channel.channel_id %>" method="post" class="form">
+  <input type="text" name="message" class="input" required>
+  <button type="submit" class="submit">投稿</button>
+</form>
 
 <% if (messageList.length) { %>
-  <div class="white-bg">
+  <div>
     <ul class="main-list">
       <% messageList.forEach(function(messageItem) { %>
-        <li class="main-list__item">
-          <div class="message">
-            <p class="message__title">
+        <li class="main-list_item">
+          <div class="list">
+            <p class="title">
               <%= messageItem.message %>
             </p>
-            <p class="message__date">
-              <%= messageItem.user_name %>
-              <%= messageItem.created_at %>
-            </p>
+            <div class="user_info">
+              <p class="user_name">
+                <%= messageItem.user_name %>
+              </p>
+              <p class="date">
+                <%= messageItem.created_at %>
+              </p>
+            </div>
           </div>
         </li>
       <%}); %>
@@ -24,15 +37,8 @@
   </div>
 <%} %>
 
-<form action="/message/<%= channel.channel_id %>" method="post" class="board-form">
-  <input type="text" name="message" class="input" required>
-  <button type="submit" class="submit">投稿</button>
-</form>
-
 <% if (typeof user !=='undefined' ) { %>
   <span class="login-user">
     <%= user.user_name %>さんとしてログインしています
   </span>
 <%} %>
-
-<a href="/" class="btn">トップへもどる</a>
