@@ -8,7 +8,7 @@ const session = require('express-session'); // 追加
 
 const indexRouter = require('./routes/index');
 const message = require('./routes/message'); //追加
-const register = require('./routes/register'); // 追加
+const signup = require('./routes/signup'); // 追加
 const login = require('./routes/login'); // 追加
 const logout = require('./routes/logout');
 const setUser = require('./setUser'); // 追加
@@ -37,7 +37,7 @@ app.use(session({
 
 app.use('/', setUser, indexRouter);
 app.use('/message', setUser, message);　//追加
-app.use('/register', register); //追加
+app.use('/signup', signup); //追加
 app.use('/login', login); // 追加
 app.use('/logout', logout);
 app.use('/del', del);

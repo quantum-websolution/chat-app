@@ -6,23 +6,26 @@
 
 <p class="main-title"><%= title %></p>
 
-
 <% if (typeof emailExists !== 'undefined') { %>
   <p class="error"><%= emailExists %></p>
 <% } %>
-<form action="/register" method="post" class="form">
-  <p>
+
+<form action="/signup" method="post" class="form">
+  <div class="userName">
     <span class="label">userName</span>
     <input type="text" name="user_name" class="input" required>
-  </p>
-  <p>
+  </div>
+
+  <div class="email">
     <span class="label">Email</span>
     <input type="email" name="email" class="input" required>
-  </p>
-  <p>
+  </div>
+
+  <div class="password">
     <span class="label">password</span>
     <input type="password" name="password" class="input" required>
-  </p>
+  </div>
+
   <div class="button-area">
     <button type="submit" class="submit">新規会員登録</button>
   </div>
