@@ -18,7 +18,6 @@ router.post('/', async function (req, res, next) {
     const email = req.body.email;
     const password = req.body.password;
 
-    // パスワードのハッシュをデータベースから取得
     const query = 'SELECT user_id, user_password FROM users WHERE user_email = $1 LIMIT 1';
 
     const result = await pool.query(query, [email]);
@@ -39,6 +38,7 @@ router.post('/', async function (req, res, next) {
           noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
         });
       }
+
     } else {
       res.render('login', {
         title: 'ログイン',

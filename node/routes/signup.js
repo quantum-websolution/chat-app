@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); //追加
 const pool = require('../dbConnection');
 
 router.get('/', (req, res, next) => {
@@ -20,8 +20,8 @@ router.post('/', async (req, res, next) => {
     const signupQuery = 'INSERT INTO users (user_name, user_email, user_password, created_at) VALUES ($1, $2, $3, $4)';
 
     // 既に登録されているメールアドレスかどうかを確認
-    const emailExists = await pool.query(emailExistsQuery, [email]);
     const emailExistsQuery = 'SELECT * FROM users WHERE user_email = $1 LIMIT 1';
+    const emailExists = await pool.query(emailExistsQuery, [email]);
 
     if (emailExists.rows.length) {
       res.render('signup', {
@@ -33,6 +33,7 @@ router.post('/', async (req, res, next) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // ユーザーの新規登録
+      //password → hashedPasswordに変更
       await pool.query(signupQuery, [userName, email, hashedPassword, createdAt]);
 
       res.redirect('/login');
