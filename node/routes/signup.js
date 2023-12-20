@@ -15,13 +15,13 @@ router.post('/', async (req, res, next) => {
     const userName = req.body.user_name;
     const email = req.body.email;
     const password = req.body.password;
-    const createdAt = dayjs().format('YYYY-MM-DD HH:mm');
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     const signupQuery = 'INSERT INTO users (user_name, user_email, user_password, created_at) VALUES ($1, $2, $3, $4)';
 
     // 既に登録されているメールアドレスかどうかを確認
-    const emailExistsQuery = 'SELECT * FROM users WHERE user_email = $1 LIMIT 1';
     const emailExists = await pool.query(emailExistsQuery, [email]);
+    const emailExistsQuery = 'SELECT * FROM users WHERE user_email = $1 LIMIT 1';
 
     if (emailExists.rows.length) {
       res.render('signup', {
@@ -29,8 +29,12 @@ router.post('/', async (req, res, next) => {
         emailExists: '既に登録されているメールアドレスです'
       });
     } else {
+      // パスワードのハッシュ化
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // ユーザーの新規登録
-      await pool.query(signupQuery, [userName, email, password, createdAt]);
+      await pool.query(signupQuery, [userName, email, hashedPassword, createdAt]);
+
       res.redirect('/login');
     }
 
