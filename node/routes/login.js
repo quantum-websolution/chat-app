@@ -32,19 +32,15 @@ router.post('/', async function (req, res, next) {
       if (isPasswordValid) {
         req.session.user_id = userId;
         res.redirect('/');
-      } else {
-        res.render('login', {
-          title: 'ログイン',
-          noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
-        });
+        return; // ログイン成功時に関数を終了
       }
-
-    } else {
-      res.render('login', {
-        title: 'ログイン',
-        noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
-      });
     }
+
+    // 行が見つからないか、パスワードが無効な場合のエラーメッセージ
+    res.render('login', {
+      title: 'ログイン',
+      noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
+    });
 
   } catch (error) {
     console.error(error);
