@@ -5,7 +5,19 @@ const pool = require('../dbConnection');
 
 router.get('/', async (req, res, next) => {
   try {
-    const query = 'SELECT B.channel_id, B.user_id, B.channel_title, COALESCE(U.user_name, \'名無し\') AS user_name, TO_CHAR(B.created_at, \'YYYY年MM月DD日 HH24時MI分SS秒\') AS created_at FROM channel B LEFT OUTER JOIN users U ON B.user_id = U.user_id ORDER BY B.created_at DESC';
+    const query =
+      `SELECT
+        C.channel_id,
+        C.user_id,
+        C.channel_title,
+        COALESCE(U.user_name, '名無し') AS user_name,
+        TO_CHAR(C.created_at, 'YYYY年MM月DD日 HH24時MI分SS秒') AS created_at
+      FROM
+        channel C
+      LEFT OUTER JOIN
+        users U ON C.user_id = U.user_id
+      ORDER BY
+        C.created_at DESC;`;
 
     const result = await pool.query(query);
 
