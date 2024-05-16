@@ -1,11 +1,5 @@
 <% layout('layout') %>
 
-<% if (typeof user !=='undefined' ) { %>
-  <span class="login-user">
-    <%= user.user_name %>さんとしてログインしています
-  </span>
-<% } %>
-
 <form action="/" method="post" class="form">
   <input type="text" name="title" class="input" placeholder="タイトル" required>
   <button type="submit" class="submit">ボード作成</button>

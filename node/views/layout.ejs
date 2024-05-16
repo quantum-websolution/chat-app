@@ -12,6 +12,13 @@
 
 <body>
   <div class="wrapper">
+    <h1>chatアプリ</h1>
+    <% if (typeof user !=='undefined' ) { %>
+      <span class="login-user">
+        <%= user.user_name %>さんとしてログインしています
+      </span>
+    <% } %>
+    
     <%- body %>
       
     <% if (typeof user !== 'undefined') { %>
